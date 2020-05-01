@@ -9,13 +9,13 @@ module R2M
   class ProcessorTest < Minitest::Test
     def test_convert_it_to_methods
       rspec_in = <<~IT_SPEC
-        it 'converts it"s to test method with # support' do
+        it '"converts" to test method with # support' do
           assert true
         end
       IT_SPEC
 
       minitest_exp = <<~MINITEST_TEST
-        def test_converts_it_s_to_test_method_with_support
+        def test_converts_to_test_method_with_support
           assert true
         end
       MINITEST_TEST

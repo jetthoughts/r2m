@@ -20,10 +20,10 @@ module R2M
     #   # => def test_converts_it_s_to_test_method_with_support
     def convert_it_to_methods(file)
       @command.gsub_file(file, /(?<=\bit ').*?(?=' do\b)/) do |match|
-        match.gsub(/[^\w]+/, '_').downcase
+        match.gsub(/\W+/, '_').downcase
       end
 
-      @command.gsub_file(file, /it '(.*)' do/, 'def test_\1')
+      @command.gsub_file(file, /it '_?(.*)' do/, 'def test_\1')
     end
 
     # Finds +be_empty+ RSpec matchers and converts to minitest matchers
