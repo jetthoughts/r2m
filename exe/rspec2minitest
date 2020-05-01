@@ -30,21 +30,29 @@ find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to_not be_nil/.wont_be_ni
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to be_an_\(.*\)/.wont_be :\1\?/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_a(/.must_be_kind_of(/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_an(/.must_be_kind_of(/g' {} \;
+
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_an_\(.*\)/.must_be :\1\?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_\(.*\)/.must_be :\1\?/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to_not be_\(.*\)/.wont_be :\1\?/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to be_\(.*\)/.wont_be :\1\?/g' {} \;
-find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_\(.*\)/.must_be :\1\?/g' {} \;
+
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be_nil/.must_be_nil/g' {} \;
+
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to eq/.must_equal/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to eq/.wont_equal/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to_not eq/.wont_equal/g' {} \;
+
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to include/.wont_include/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to_not include/.wont_include/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to include/.must_include/g' {} \;
+
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to match/.must_match/g' {} \;
+
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_kind_of/.must_be_kind_of/g' {} \;
+
+# requests
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/expect(response).to have_http_status/assert_response/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to redirect_to/.must_redirect_to/g' {} \;
-find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to match/.must_match/g' {} \;
 
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_content/assert_text/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_no_content/assert_no_text/g' {} \;
@@ -64,7 +72,6 @@ find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to ha
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_button/.must_have_button/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_no_button/.wont_have_button/g' {} \;
 
-find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to match/.must_match/g' {} \;
 
 find $tests_path -name '*_spec.rb' -exec sed -i '' "s/expect[ {]/skip('FIXME: NEED TO MIGRATE MANUALLY FROM RSPEC')
 expect /g" {} \;

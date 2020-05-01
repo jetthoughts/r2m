@@ -43,6 +43,26 @@ module R2M
       end
     end
 
+    def test_convert_simple_matcher
+      rspec_in = <<~IT_SPEC
+        expect(target).to eq expect
+        expect(target).to include expect
+        expect(target).to be_kind_of expect
+        expect(target).to match /expect/
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        expect(target).must_equal expect
+        expect(target).must_include expect
+        expect(target).must_be_kind_of expect
+        expect(target).must_match /expect/
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_simple_matcher(file)
+      end
+    end
+
     def test_convert_context_to_describe
       rspec_in = <<~IT_SPEC
         context 'test' do
