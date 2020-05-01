@@ -2,7 +2,7 @@ require_relative 'lib/r2m/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "r2m"
-  spec.version       = R2m::VERSION
+  spec.version       = R2M::VERSION
   spec.authors       = ["Paul Keen"]
   spec.email         = ["info@jetthoughts.com"]
 
