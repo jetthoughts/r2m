@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'rubygems'
+require 'thor'
+
+class R2MCommand < Thor
+  include Thor::Actions
+
+  default_command :convert
+  argument :path, default: 'spec'
+
+  def self.exit_on_failure?
+    true
+  end
+
+  desc 'convert', 'Convert Rspec to MiniTest'
+  def convert
+    files.each { |file| process file }
+  end
+
+  private
+
+  def process(file)
+
+    #   it 'converts it"s to test method with # support' do # => def test_converts_it_s_to_test_method_with_support
+    convert_it_to_methods(file)
+  end
+
+  # Finds +it+ cases and converts to test methods declarations
+  #
+  #   it 'converts it"s to test method with # support' do
+  #   # => def test_converts_it_s_to_test_method_with_support
+  def convert_it_to_methods(file)
+    gsub_file(file, /(?<=\bit ').*?(?=' do\b)/) do |match|
+      match.gsub(/[^\w]+/, '_').downcase
+    end
+
+    gsub_file(file, /it '(.*)' do/, 'def test_\1')
+  end
+
+  def files
+    if Dir.exist?(path)
+      Dir.glob(File.join(path, '**', '*_test.rb'))
+    else
+      Dir.glob(path)
+    end
+  end
+end
+
+R2MCommand.start
