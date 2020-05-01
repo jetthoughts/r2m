@@ -50,5 +50,18 @@ module R2M
       @command.gsub_file(file, /\.to be_empty/, '.must_be_empty')
       @command.gsub_file(file, /\.(to_not|not_to) be_empty/, '.wont_be_empty')
     end
+
+    # Finds +equal+ RSpec matchers and converts to minitest matchers
+    #
+    #   expect(target).to eq expect # => expect(target).must_equal expect
+    #   expect(target).not_to eq expect # => expect(target).wont_equal expect
+    def convert_simple_matcher(file)
+      @command.gsub_file(file, /\.(to_not|not_to|to)\s+(eq|include|match|be_kind_of)\b/) do |match|
+        match
+          .gsub(/\s+/, ' ')
+          .gsub(/\.\w+ /, '.to_not ' => '.wont_', '.not_to ' => '.wont_', '.to ' => '.must_')
+          .gsub(/(?<=_)eq/, 'equal')
+      end
+    end
   end
 end
