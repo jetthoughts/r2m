@@ -99,10 +99,107 @@ module R2M
       end
     end
 
+    def test_convert_helpers_suites_when_in_helpers_folder
+      rspec_in = <<~IT_SPEC
+        helper.some_rails_helper_method
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        some_rails_helper_method
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in, dir: 'helpers') do |file|
+        Processor.new(Command.new).convert_helpers_suites(file)
+      end
+    end
+
+    def test_convert_helpers_suites_when_not_in_helpers_folder
+      rspec_in = <<~IT_SPEC
+        helper.some_rails_helper_method
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        helper.some_rails_helper_method
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_helpers_suites(file)
+      end
+    end
+
+    def test_convert_declarations_when_controller_in_the_name
+      rspec_in = <<~IT_SPEC
+        RSpec.describe Admin::TestableController do
+        RSpec.describe 'Admin::QuotedTestableController' do
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        class Admin::TestableControllerTest < ActionController::TestCase
+        class Admin::QuotedTestableControllerTest < ActionController::TestCase
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_declarations(file)
+      end
+    end
+
+    def test_convert_declarations_when_mailer_in_the_name
+      rspec_in = <<~IT_SPEC
+        RSpec.describe Admin::TestableMailer do
+        RSpec.describe 'Admin::QuotedTestableMailer' do
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        class Admin::TestableMailerTest < ActionMailer::TestCase
+        class Admin::QuotedTestableMailerTest < ActionMailer::TestCase
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_declarations(file)
+      end
+    end
+
+    def test_convert_declarations_when_helper_in_the_name
+      rspec_in = <<~IT_SPEC
+        RSpec.describe Admin::TestableHelper do
+        RSpec.describe 'Admin::QuotedTestableHelper' do
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        class Admin::TestableHelperTest < ActionView::TestCase
+        class Admin::QuotedTestableHelperTest < ActionView::TestCase
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_declarations(file)
+      end
+    end
+
+    def test_convert_declarations_when_in_the_requests_folder
+      rspec_in = <<~IT_SPEC
+        RSpec.describe Admin::TestableHelper do
+        RSpec.describe 'Admin::QuotedTestableHelper' do
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        class Admin::TestableHelperTest < ActionView::TestCase
+        class Admin::QuotedTestableHelperTest < ActionView::TestCase
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_declarations(file)
+      end
+    end
+
     private
 
-    def assert_capture(exp, input)
-      snippet = Tempfile.create
+    def assert_capture(exp, input, dir: nil)
+      if dir
+        absolute_dir = File.join(Dir.tmpdir, 'test', dir)
+        FileUtils.mkdir_p(absolute_dir)
+      end
+
+      snippet = Tempfile.create('', absolute_dir)
       snippet.puts input
       snippet.close
 
