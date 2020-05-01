@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    $ r2m convert test/system/**/*_spec.rb
 
 ## Development
 
