@@ -63,5 +63,33 @@ module R2M
           .gsub(/(?<=_)eq/, 'equal')
       end
     end
+
+    def convert_helpers_suites(file)
+      @command.gsub_file(file, /\bhelper\./, '') if located_in_helpers?(file)
+    end
+
+    def convert_declarations(file)
+      @command.gsub_file(
+        file,
+        /RSpec\.describe ['"]?(.+?Controller)['"]?.*/,
+        'class \1Test < ActionController::TestCase'
+      )
+      @command.gsub_file(
+        file,
+        /RSpec\.describe ['"]?(.+?Mailer)['"]?.*/,
+        'class \1Test < ActionMailer::TestCase'
+      )
+      @command.gsub_file(
+        file,
+        /RSpec\.describe ['"]?(.+?Helper)['"]?.*/,
+        'class \1Test < ActionView::TestCase'
+      )
+    end
+
+    private
+
+    def located_in_helpers?(file)
+      file =~ /\/helpers\//
+    end
   end
 end

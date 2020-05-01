@@ -79,20 +79,21 @@ expect /g" {} \;
 
 find $tests_path -path '*/helpers/*' -name '*_spec.rb' -exec sed -i '' 's/helper\.//g' {} \;
 
-find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe '"'"'\(.*\)'"'"' do.*/Class.new(ApplicationSystemTestCase) do #\1/g' {} \;
-find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/, screenshot: true//g' {} \;
-
 find $tests_path -path '*/controllers/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*Controller\).*/class \1Test < ActionController::TestCase/g' {} \;
 find $tests_path -path '*/mailers/*'  -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*Mailer\).*/class \1Test < ActionMailer::TestCase/g' {} \;
 find $tests_path -path '*/helpers/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*Helper\).*/class \1Test < ActionView::TestCase/g' {} \;
-
 find $tests_path -path '*/requests/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe '"'"'\(.*\)'"'"' do.*/class \1Test < ActionDispatch::IntegrationTest/g' {} \;
+
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe '"'"'\(.*\)'"'"' do.*/Class.new(ApplicationSystemTestCase) do #\1/g' {} \;
 
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe '"'"'\(.*\)'"'"' do/class \1Test < ActiveSupport::TestCase/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*\) do/class \1Test < ActiveSupport::TestCase/g' {} \;
 
 
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/around do/warn "FIX: AROUND"; around do/g' {} \;
+
+# other project specific
+#find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/, screenshot: true//g' {} \;
 
 
 rubocop --safe-auto-correct --disable-uncorrectable $tests_path
