@@ -1,0 +1,101 @@
+#!/bin/bash --login
+
+tests_path=${1:-test}
+
+cp -a $tests_path test/
+
+tests_path=test/$(basename $tests_path)
+
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/system_helper/application_system_test_case/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/rails_helper/test_helper/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/spec_helper/test_helper/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/context/describe/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/stub(/stubs(/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/double/stub/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/should_receive/expects/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/and_return/returns/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be ==/.must_equal/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be_empty/.must_be_empty/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to_not be_empty/.wont_be_empty/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be_truthy/.must_be :present?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be_falsey/.must_be :blank?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.not_to be_nil/.wont_be_nil/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to_not be_nil/.wont_be_nil/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to be_an_\(.*\)/.wont_be :\1\?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_a(/.must_be_kind_of(/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_an(/.must_be_kind_of(/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_an_\(.*\)/.must_be :\1\?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to_not be_\(.*\)/.wont_be :\1\?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to be_\(.*\)/.wont_be :\1\?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_\(.*\)/.must_be :\1\?/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be_nil/.must_be_nil/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to eq/.must_equal/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to eq/.wont_equal/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to_not eq/.wont_equal/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.not_to include/.wont_include/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to_not include/.wont_include/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to include/.must_include/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/\.to be_kind_of/.must_be_kind_of/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/expect(response).to have_http_status/assert_response/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to redirect_to/.must_redirect_to/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to match/.must_match/g' {} \;
+
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_content/assert_text/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_no_content/assert_no_text/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to_not have_content/assert_no_text/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_selector/assert_selector/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.not_to have_selector/assert_no_selector/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to_not have_selector/assert_no_selector/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_content/.must_have_content/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.not_to have_content/.wont_have_content/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_no_content/.wont_have_content/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_field/.must_have_field/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_checked_field/assert_checked_field/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.not_to have_checked_field/assert_no_checked_field/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to_not have_checked_field/assert_no_checked_field/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_link/.must_have_link/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_no_link/.wont_have_link/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_button/.must_have_button/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_no_button/.wont_have_button/g' {} \;
+
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to match/.must_match/g' {} \;
+
+find $tests_path -name '*_spec.rb' -exec sed -i '' "s/expect[ {]/skip('FIXME: NEED TO MIGRATE MANUALLY FROM RSPEC')
+expect /g" {} \;
+
+
+find $tests_path -path '*/helpers/*' -name '*_spec.rb' -exec sed -i '' 's/helper\.//g' {} \;
+
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe '"'"'\(.*\)'"'"' do.*/Class.new(ApplicationSystemTestCase) do #\1/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/, screenshot: true//g' {} \;
+
+find $tests_path -path '*/controllers/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*Controller\).*/class \1Test < ActionController::TestCase/g' {} \;
+find $tests_path -path '*/mailers/*'  -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*Mailer\).*/class \1Test < ActionMailer::TestCase/g' {} \;
+find $tests_path -path '*/helpers/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*Helper\).*/class \1Test < ActionView::TestCase/g' {} \;
+
+find $tests_path -path '*/requests/*' -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe '"'"'\(.*\)'"'"' do.*/class \1Test < ActionDispatch::IntegrationTest/g' {} \;
+
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe '"'"'\(.*\)'"'"' do/class \1Test < ActiveSupport::TestCase/g' {} \;
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/RSpec\.describe \(.*\) do/class \1Test < ActiveSupport::TestCase/g' {} \;
+
+
+find $tests_path -name '*_spec.rb' -exec sed -i '' 's/around do/warn "FIX: AROUND"; around do/g' {} \;
+
+
+rubocop --safe-auto-correct --disable-uncorrectable $tests_path
+
+echo "TODO: assert_enqueued_jobs"
+echo "TODO: assert_change"
+echo "TODO: assert_raise"
+echo "TODO: shared_examples"
+
+rename "s/_spec/_test/" "test/${tests_path}/**/*.rb"
+
+
+# TODO spec/models describe (\w+)(\, type\: \:model)? do class $1Test < ActiveSupport::TestCase
+# TODO: system tests replace class from filename
+# "TODO: replace all \bspecify\b by it"
+# "TODO: replace all \bit\s?\((.*?)\) do by it '' do"
+# "TODO: replace all \bit\s?\((.*?)\) { .*? } by it '' do; $2; end"
+# "TODO: replace all (?<=\bit '[\w\s]+)\s+(?=.*?\w' do$) with _"
+# "TODO: replace all it '(.*)' do with def test_\L$1"
