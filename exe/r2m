@@ -3,6 +3,6 @@
 
 require 'rubygems'
 
-require 'r2m/command'
+require_relative '../lib/r2m/command'
 
-R2M::Command.start
+R2M::Command.start(ARGV)
