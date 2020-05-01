@@ -43,6 +43,42 @@ module R2M
       end
     end
 
+    def test_convert_context_to_describe
+      rspec_in = <<~IT_SPEC
+        context 'test' do
+          it { expect(target).to be_empty }
+        end
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        describe 'test' do
+          it { expect(target).to be_empty }
+        end
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_context_to_describe(file)
+      end
+    end
+
+    def test_convert_require_helpers
+      rspec_in = <<~IT_SPEC
+        require 'system_helper'
+        require 'rails_helper'
+        require 'spec_helper'
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        require 'application_system_test_case'
+        require 'test_helper'
+        require 'test_helper'
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_require_helpers(file)
+      end
+    end
+
     private
 
     def assert_capture(exp, input)

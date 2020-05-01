@@ -26,6 +26,21 @@ module R2M
       @command.gsub_file(file, /it '_?(.*)' do/, 'def test_\1')
     end
 
+    # Finds +it+ cases and converts to test methods declarations
+    #
+    #   context 'with context' do # => describe 'with context' do
+    def convert_context_to_describe(file)
+      @command.gsub_file(file, /\bcontext( '.*?' do\b)/, 'describe\1')
+    end
+
+    # Finds +it+ cases and converts to test methods declarations
+    #
+    #   context 'with context' do # => describe 'with context' do
+    def convert_require_helpers(file)
+      @command.gsub_file(file, /\bsystem_helper\b/, 'application_system_test_case')
+      @command.gsub_file(file, /\b(rails_helper|spec_helper)\b/, 'test_helper')
+    end
+
     # Finds +be_empty+ RSpec matchers and converts to minitest matchers
     #
     #   expect(target).to be_empty # => expect(target).must_be_empty

@@ -6,14 +6,20 @@ cp -a $tests_path test/
 
 tests_path=test/$(basename $tests_path)
 
+# require helpers
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/system_helper/application_system_test_case/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/rails_helper/test_helper/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/spec_helper/test_helper/g' {} \;
+
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/context/describe/g' {} \;
+
+# mocks
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/stub(/stubs(/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/double/stub/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/should_receive/expects/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/and_return/returns/g' {} \;
+
+# matchers
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be ==/.must_equal/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to be_empty/.must_be_empty/g' {} \;
 find $tests_path -name '*_spec.rb' -exec sed -i '' 's/.to_not be_empty/.wont_be_empty/g' {} \;
