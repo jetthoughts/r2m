@@ -239,6 +239,25 @@ module R2M
       end
     end
 
+    def test_convert_around
+      rspec_in = <<~IT_SPEC
+        around(:all) do |runner|
+          runner.run
+        end
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        skip 'TODO: Remove this skip when `around` will be migrated manually by replacing `run` with `call`'
+        around(:all) do |runner|
+          runner.run
+        end
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in) do |file|
+        Processor.new(Command.new).convert_around(file)
+      end
+    end
+
     private
 
     def assert_capture(exp, input, dir: nil)

@@ -11,7 +11,14 @@ module R2M
 
     def process(file)
       #   it 'converts it"s to test method with # support' do # => def test_converts_it_s_to_test_method_with_support
+      convert_require_helpers(file)
+      convert_declarations(file)
+      convert_declarations(file)
+      convert_context_to_describe(file)
       convert_it_to_methods(file)
+      convert_helpers_suites(file)
+      convert_mather_be_empty(file)
+      convert_simple_matcher(file)
     end
 
     # Finds +it+ cases and converts to test methods declarations
@@ -39,6 +46,7 @@ module R2M
     def convert_require_helpers(file)
       @command.gsub_file(file, /\bsystem_helper\b/, 'application_system_test_case')
       @command.gsub_file(file, /\b(rails_helper|spec_helper)\b/, 'test_helper')
+      @command.gsub_file(file, /require (['"]?)rspec\1/, "require 'minitest/autorun'")
     end
 
     # Finds +be_empty+ RSpec matchers and converts to minitest matchers
@@ -120,6 +128,13 @@ module R2M
         /RSpec\.describe ['"]?(.+?)['"]? do\b/,
         'class \1Test < ActiveSupport::TestCase'
       )
+    end
+
+    MANUAL_AROUND_PROCESS = "skip 'TODO: Remove this skip when `around` will be migrated manually by replacing `run` with `call`'"
+    def convert_around(file)
+      @command.gsub_file(file, /^\s*?\baround\b.+?\bdo\b.*?$/) do |match|
+        "#{MANUAL_AROUND_PROCESS}\n#{match}"
+      end
     end
 
     private
