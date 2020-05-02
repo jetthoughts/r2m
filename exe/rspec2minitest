@@ -60,13 +60,13 @@ find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_selector/assert_selector/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.not_to have_selector/assert_no_selector/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to_not have_selector/assert_no_selector/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_checked_field/assert_checked_field/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.not_to have_checked_field/assert_no_checked_field/g' {} \;
+find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to_not have_checked_field/assert_no_checked_field/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_content/.must_have_content/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.not_to have_content/.wont_have_content/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_no_content/.wont_have_content/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_field/.must_have_field/g' {} \;
-find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to have_checked_field/assert_checked_field/g' {} \;
-find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.not_to have_checked_field/assert_no_checked_field/g' {} \;
-find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/expect(page)\.to_not have_checked_field/assert_no_checked_field/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_link/.must_have_link/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_no_link/.wont_have_link/g' {} \;
 find $tests_path -path '*/system/*' -name '*_spec.rb' -exec sed -i '' 's/\.to have_button/.must_have_button/g' {} \;
