@@ -69,27 +69,71 @@ module R2M
     end
 
     def convert_declarations(file)
+      @command.gsub_file(file, /RSpec\.describe (['"])(.*?)\1 do\b/) do |match|
+        title = match[/RSpec\.describe (['"])(.*?)\1 do/, 2]
+
+        camelCasedTitle = title.split('::').map do |title_part|
+          title_part
+            .split
+            .reject(&:empty?)
+            .map { |part| part[0].upcase + part[1..-1] }.join
+        end.join('::')
+
+        "RSpec.describe '#{camelCasedTitle}' do"
+      end
+
       @command.gsub_file(
         file,
-        /RSpec\.describe ['"]?(.+?Controller)['"]?.*/,
+        /RSpec\.describe ['"]?(.+?Controller)['"]? do\b/,
         'class \1Test < ActionController::TestCase'
       )
       @command.gsub_file(
         file,
-        /RSpec\.describe ['"]?(.+?Mailer)['"]?.*/,
+        /RSpec\.describe ['"]?(.+?Mailer)['"]? do\b/,
         'class \1Test < ActionMailer::TestCase'
       )
+
       @command.gsub_file(
         file,
-        /RSpec\.describe ['"]?(.+?Helper)['"]?.*/,
+        /RSpec\.describe ['"]?(.+?Helper)['"]? do\b/,
         'class \1Test < ActionView::TestCase'
+      )
+
+      if located_in_requests?(file)
+        @command.gsub_file(
+          file,
+          /RSpec\.describe ['"]?(.+?)['"]? do\b/,
+          'class \1Test < ActionDispatch::IntegrationTest'
+        )
+      end
+
+      if located_in?(file, :systems)
+        @command.gsub_file(
+          file,
+          /RSpec\.describe ['"]?(.+?)['"]? do\b/,
+          'class \1Test < ApplicationSystemTestCase'
+        )
+      end
+
+      @command.gsub_file(
+        file,
+        /RSpec\.describe ['"]?(.+?)['"]? do\b/,
+        'class \1Test < ActiveSupport::TestCase'
       )
     end
 
     private
 
     def located_in_helpers?(file)
-      file =~ /\/helpers\//
+      located_in?(file, :helpers)
+    end
+
+    def located_in_requests?(file)
+      located_in?(file, :requests)
+    end
+
+    def located_in?(file, sub_folder)
+      file =~ /(test|spec)\/#{sub_folder}\//
     end
   end
 end

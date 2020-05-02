@@ -177,13 +177,61 @@ module R2M
 
     def test_convert_declarations_when_in_the_requests_folder
       rspec_in = <<~IT_SPEC
-        RSpec.describe Admin::TestableHelper do
-        RSpec.describe 'Admin::QuotedTestableHelper' do
+        RSpec.describe 'some  name with spaces' do
+        end
       IT_SPEC
 
       minitest_exp = <<~MINITEST_TEST
-        class Admin::TestableHelperTest < ActionView::TestCase
-        class Admin::QuotedTestableHelperTest < ActionView::TestCase
+        class SomeNameWithSpacesTest < ActionDispatch::IntegrationTest
+        end
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in, dir: 'spec/requests') do |file|
+        Processor.new(Command.new).convert_declarations(file)
+      end
+    end
+
+    def test_convert_declarations_when_in_the_systems_folder
+      rspec_in = <<~IT_SPEC
+        RSpec.describe 'some  name with spaces' do
+        end
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        class SomeNameWithSpacesTest < ApplicationSystemTestCase
+        end
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in, dir: 'spec/systems') do |file|
+        Processor.new(Command.new).convert_declarations(file)
+      end
+    end
+
+    def test_convert_declarations_when_in_the_custom_folder
+      rspec_in = <<~IT_SPEC
+        RSpec.describe 'some  name with spaces' do
+        end
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        class SomeNameWithSpacesTest < ActiveSupport::TestCase
+        end
+      MINITEST_TEST
+
+      assert_capture(minitest_exp, rspec_in, dir: 'spec/carriers') do |file|
+        Processor.new(Command.new).convert_declarations(file)
+      end
+    end
+
+    def test_convert_declarations_when_there_is_comment_at_the_end
+      rspec_in = <<~IT_SPEC
+        RSpec.describe 'target' do # comment
+        end
+      IT_SPEC
+
+      minitest_exp = <<~MINITEST_TEST
+        class TargetTest < ActiveSupport::TestCase # comment
+        end
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
