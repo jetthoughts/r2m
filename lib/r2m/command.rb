@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'thor'
-require_relative './processor'
+require_relative './spec_convertor'
 
 module R2M
   # Adds CLI commands convert and migrate
@@ -16,6 +16,7 @@ module R2M
     end
 
     desc 'convert [path...]', 'Convert Rspec to minitest'
+
     def convert(pathes)
       files(pathes).each { |file| process file }
     end
@@ -26,6 +27,7 @@ module R2M
       default: true,
       aliases: ['s'],
       type: :boolean
+
     def migrate(pathes)
       pp files(pathes)
     end
@@ -33,12 +35,14 @@ module R2M
     private
 
     def process(file)
-      Processor.new(self).process(file)
+      SpecConvertor.new(self).process(file)
     end
 
     def files(pathes)
       Array(pathes).map do |path|
-        if Dir.exist?(path)
+        if File.exist?(path) && !File.directory?(path)
+          path
+        elsif Dir.exist?(path)
           Dir.glob(File.join(path, '**', '*_spec.rb'))
         else
           Dir.glob(path)

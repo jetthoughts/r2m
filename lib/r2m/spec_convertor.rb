@@ -4,7 +4,7 @@ require 'thor'
 
 module R2M
   # Process input RSpec and convert it to minitest
-  class Processor
+  class SpecConvertor
     def initialize(command)
       @command = command
     end
