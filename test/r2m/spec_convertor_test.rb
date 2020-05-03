@@ -3,10 +3,10 @@
 require 'test_helper'
 
 require 'r2m/command'
-require 'r2m/processor'
+require 'r2m/spec_convertor'
 
 module R2M
-  class ProcessorTest < Minitest::Test
+  class SpecConvertorTest < Minitest::Test
     def test_convert_it_to_methods
       rspec_in = <<~IT_SPEC
         it '"converts" to test method with # support' do
@@ -21,7 +21,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_it_to_methods(file)
+        SpecConvertor.new(Command.new).convert_it_to_methods(file)
       end
     end
 
@@ -39,7 +39,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_mather_be_empty(file)
+        SpecConvertor.new(Command.new).convert_mather_be_empty(file)
       end
     end
 
@@ -59,7 +59,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_simple_matcher(file)
+        SpecConvertor.new(Command.new).convert_simple_matcher(file)
       end
     end
 
@@ -77,7 +77,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_context_to_describe(file)
+        SpecConvertor.new(Command.new).convert_context_to_describe(file)
       end
     end
 
@@ -95,7 +95,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_require_helpers(file)
+        SpecConvertor.new(Command.new).convert_require_helpers(file)
       end
     end
 
@@ -109,7 +109,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'helpers') do |file|
-        Processor.new(Command.new).convert_helpers_suites(file)
+        SpecConvertor.new(Command.new).convert_helpers_suites(file)
       end
     end
 
@@ -123,7 +123,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_helpers_suites(file)
+        SpecConvertor.new(Command.new).convert_helpers_suites(file)
       end
     end
 
@@ -139,7 +139,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_declarations(file)
+        SpecConvertor.new(Command.new).convert_declarations(file)
       end
     end
 
@@ -155,7 +155,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_declarations(file)
+        SpecConvertor.new(Command.new).convert_declarations(file)
       end
     end
 
@@ -171,7 +171,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_declarations(file)
+        SpecConvertor.new(Command.new).convert_declarations(file)
       end
     end
 
@@ -187,7 +187,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'spec/requests') do |file|
-        Processor.new(Command.new).convert_declarations(file)
+        SpecConvertor.new(Command.new).convert_declarations(file)
       end
     end
 
@@ -203,7 +203,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'spec/systems') do |file|
-        Processor.new(Command.new).convert_declarations(file)
+        SpecConvertor.new(Command.new).convert_declarations(file)
       end
     end
 
@@ -219,7 +219,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'spec/carriers') do |file|
-        Processor.new(Command.new).convert_declarations(file)
+        SpecConvertor.new(Command.new).convert_declarations(file)
       end
     end
 
@@ -235,7 +235,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_declarations(file)
+        SpecConvertor.new(Command.new).convert_declarations(file)
       end
     end
 
@@ -254,7 +254,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        Processor.new(Command.new).convert_around(file)
+        SpecConvertor.new(Command.new).convert_around(file)
       end
     end
 
