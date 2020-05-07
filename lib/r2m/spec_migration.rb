@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rake/file_utils'
+
 class SpecMigration # rubocop:todo Style/Documentation
   def initialize(basedir)
     @basedir = Pathname(basedir)
