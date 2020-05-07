@@ -2,10 +2,10 @@
 
 say 'Updating rails to run minitests/spec'
 
-gem_group :test do
-  gem 'minitest-spec-rails', require: false
-  gem 'rspec-expectations', require: false
-end
+gem 'minitest-spec-rails', require: false, group: :test
+gem 'rspec-expectations', require: false, group: :test
+
+`bundle install`
 
 say <<~MSG
   **************************

@@ -32,19 +32,19 @@ module R2M
       type: :boolean
     )
     def migrate(*paths)
-      setup_rails_to_run_minitests
+      setup_rails_to_run_minitest
 
       files(paths.flatten).each do |path|
         say "Processing #{path}"
-        run_migrate(path)
-        run_convert(path)
+        migrated_path = run_migrate(path)
+        run_convert(migrated_path)
       end
     end
 
     private
 
-    def setup_rails_to_run_minitests
-      path_to_rails_template = File.expand_path('./template.rb', __dir__)
+    def setup_rails_to_run_minitest
+      path_to_rails_template = File.expand_path('../../template.rb', __dir__)
       system("DISABLE_SPRING=1 rails app:template LOCATION=#{path_to_rails_template}")
     end
 
@@ -54,11 +54,14 @@ module R2M
 
     def run_convert(file)
       say "Processing #{file}"
-      SpecConvector.new(self).process(file)
+      SpecConvector.new(self).process(file.to_s)
     end
 
     def files(paths)
-      Array(paths).map do |path|
+      paths = Array(paths)
+      return Dir.glob('spec/**/*_spec.rb') if paths.empty?
+
+      paths.map do |path|
         if File.exist?(path) && !File.directory?(path)
           path
         elsif Dir.exist?(path)
