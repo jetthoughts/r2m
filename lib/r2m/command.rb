@@ -32,6 +32,8 @@ module R2M
       type: :boolean
     )
     def migrate(*paths)
+      setup_rails_to_run_minitests
+
       files(paths.flatten).each do |path|
         say "Processing #{path}"
         run_migrate(path)
@@ -40,6 +42,11 @@ module R2M
     end
 
     private
+
+    def setup_rails_to_run_minitests
+      path_to_rails_template = File.expand_path('./template.rb', __dir__)
+      system("DISABLE_SPRING=1 rails app:template LOCATION=#{path_to_rails_template}")
+    end
 
     def run_migrate(path)
       SpecMigration.new(Pathname.pwd).migrate(File.realpath(path))
