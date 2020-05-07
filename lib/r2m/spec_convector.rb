@@ -4,7 +4,7 @@ require 'thor'
 
 module R2M
   # Process input RSpec and convert it to minitest
-  class SpecConvertor
+  class SpecConvector # rubocop:todo Metrics/ClassLength
     def initialize(command)
       @command = command
     end
@@ -76,18 +76,23 @@ module R2M
       @command.gsub_file(file, /\bhelper\./, '') if located_in_helpers?(file)
     end
 
-    def convert_declarations(file)
+    # rubocop:todo Metrics/MethodLength
+    def convert_declarations(file) # rubocop:todo Metrics/AbcSize
       @command.gsub_file(file, /RSpec\.describe (['"])(.*?)\1 do\b/) do |match|
         title = match[/RSpec\.describe (['"])(.*?)\1 do/, 2]
 
+        # rubocop:todo Naming/VariableName
         camelCasedTitle = title.split('::').map do |title_part|
           title_part
             .split
             .reject(&:empty?)
             .map { |part| part[0].upcase + part[1..-1] }.join
         end.join('::')
+        # rubocop:enable Naming/VariableName
 
+        # rubocop:todo Naming/VariableName
         "RSpec.describe '#{camelCasedTitle}' do"
+        # rubocop:enable Naming/VariableName
       end
 
       @command.gsub_file(
@@ -129,6 +134,7 @@ module R2M
         'class \1Test < ActiveSupport::TestCase'
       )
     end
+    # rubocop:enable Metrics/MethodLength
 
     MANUAL_AROUND_PROCESS = "skip 'TODO: Remove this skip when `around` will be migrated manually by replacing `run` with `call`'"
     def convert_around(file)
@@ -148,7 +154,7 @@ module R2M
     end
 
     def located_in?(file, sub_folder)
-      file =~ /(test|spec)\/#{sub_folder}\//
+      file =~ %r{(test|spec)/#{sub_folder}/}
     end
   end
 end

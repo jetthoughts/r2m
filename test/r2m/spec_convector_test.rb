@@ -3,11 +3,11 @@
 require 'test_helper'
 
 require 'r2m/command'
-require 'r2m/spec_convertor'
+require 'r2m/spec_convector'
 
 module R2M
-  class SpecConvertorTest < Minitest::Test
-    def test_convert_it_to_methods
+  class SpecConvectorTest < Minitest::Test # rubocop:todo Metrics/ClassLength
+    def test_convert_it_to_methods # rubocop:todo Metrics/MethodLength
       rspec_in = <<~IT_SPEC
         it '"converts" to test method with # support' do
           assert true
@@ -21,11 +21,11 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_it_to_methods(file)
+        SpecConvector.new(Command.new).convert_it_to_methods(file)
       end
     end
 
-    def test_convert_matcher_be_empty
+    def test_convert_matcher_be_empty # rubocop:todo Metrics/MethodLength
       rspec_in = <<~IT_SPEC
         expect(target).to be_empty
         expect(target).to_not be_empty
@@ -39,11 +39,11 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_mather_be_empty(file)
+        SpecConvector.new(Command.new).convert_mather_be_empty(file)
       end
     end
 
-    def test_convert_simple_matcher
+    def test_convert_simple_matcher # rubocop:todo Metrics/MethodLength
       rspec_in = <<~IT_SPEC
         expect(target).to eq expect
         expect(target).to include expect
@@ -59,11 +59,11 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_simple_matcher(file)
+        SpecConvector.new(Command.new).convert_simple_matcher(file)
       end
     end
 
-    def test_convert_context_to_describe
+    def test_convert_context_to_describe # rubocop:todo Metrics/MethodLength
       rspec_in = <<~IT_SPEC
         context 'test' do
           it { expect(target).to be_empty }
@@ -77,11 +77,11 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_context_to_describe(file)
+        SpecConvector.new(Command.new).convert_context_to_describe(file)
       end
     end
 
-    def test_convert_require_helpers
+    def test_convert_require_helpers # rubocop:todo Metrics/MethodLength
       rspec_in = <<~IT_SPEC
         require 'system_helper'
         require 'rails_helper'
@@ -95,7 +95,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_require_helpers(file)
+        SpecConvector.new(Command.new).convert_require_helpers(file)
       end
     end
 
@@ -109,7 +109,7 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'helpers') do |file|
-        SpecConvertor.new(Command.new).convert_helpers_suites(file)
+        SpecConvector.new(Command.new).convert_helpers_suites(file)
       end
     end
 
@@ -123,10 +123,11 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_helpers_suites(file)
+        SpecConvector.new(Command.new).convert_helpers_suites(file)
       end
     end
 
+    # rubocop:todo Metrics/MethodLength
     def test_convert_declarations_when_controller_in_the_name
       rspec_in = <<~IT_SPEC
         RSpec.describe Admin::TestableController do
@@ -139,10 +140,12 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_declarations(file)
+        SpecConvector.new(Command.new).convert_declarations(file)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:todo Metrics/MethodLength
     def test_convert_declarations_when_mailer_in_the_name
       rspec_in = <<~IT_SPEC
         RSpec.describe Admin::TestableMailer do
@@ -155,10 +158,12 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_declarations(file)
+        SpecConvector.new(Command.new).convert_declarations(file)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:todo Metrics/MethodLength
     def test_convert_declarations_when_helper_in_the_name
       rspec_in = <<~IT_SPEC
         RSpec.describe Admin::TestableHelper do
@@ -171,10 +176,12 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_declarations(file)
+        SpecConvector.new(Command.new).convert_declarations(file)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:todo Metrics/MethodLength
     def test_convert_declarations_when_in_the_requests_folder
       rspec_in = <<~IT_SPEC
         RSpec.describe 'some  name with spaces' do
@@ -187,10 +194,12 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'spec/requests') do |file|
-        SpecConvertor.new(Command.new).convert_declarations(file)
+        SpecConvector.new(Command.new).convert_declarations(file)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:todo Metrics/MethodLength
     def test_convert_declarations_when_in_the_systems_folder
       rspec_in = <<~IT_SPEC
         RSpec.describe 'some  name with spaces' do
@@ -203,10 +212,12 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'spec/systems') do |file|
-        SpecConvertor.new(Command.new).convert_declarations(file)
+        SpecConvector.new(Command.new).convert_declarations(file)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:todo Metrics/MethodLength
     def test_convert_declarations_when_in_the_custom_folder
       rspec_in = <<~IT_SPEC
         RSpec.describe 'some  name with spaces' do
@@ -219,10 +230,12 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in, dir: 'spec/carriers') do |file|
-        SpecConvertor.new(Command.new).convert_declarations(file)
+        SpecConvector.new(Command.new).convert_declarations(file)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
+    # rubocop:todo Metrics/MethodLength
     def test_convert_declarations_when_there_is_comment_at_the_end
       rspec_in = <<~IT_SPEC
         RSpec.describe 'target' do # comment
@@ -235,11 +248,12 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_declarations(file)
+        SpecConvector.new(Command.new).convert_declarations(file)
       end
     end
+    # rubocop:enable Metrics/MethodLength
 
-    def test_convert_around
+    def test_convert_around # rubocop:todo Metrics/MethodLength
       rspec_in = <<~IT_SPEC
         around(:all) do |runner|
           runner.run
@@ -254,12 +268,13 @@ module R2M
       MINITEST_TEST
 
       assert_capture(minitest_exp, rspec_in) do |file|
-        SpecConvertor.new(Command.new).convert_around(file)
+        SpecConvector.new(Command.new).convert_around(file)
       end
     end
 
     private
 
+    # rubocop:todo Metrics/MethodLength
     def assert_capture(exp, input, dir: nil)
       if dir
         absolute_dir = File.join(Dir.tmpdir, 'test', dir)
@@ -276,5 +291,6 @@ module R2M
     ensure
       File.unlink snippet.path
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end
