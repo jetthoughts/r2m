@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'thor'
-require_relative './spec_convertor'
+require_relative './spec_convector'
 
 module R2M
   # Adds CLI commands convert and migrate
@@ -23,10 +23,10 @@ module R2M
 
     desc 'migrate [path...]', 'Move found specs to test folder and convert them'
     method_option :replace_suffix,
-      desc: 'Renames *_spec.rb to *_test.rb',
-      default: true,
-      aliases: ['s'],
-      type: :boolean
+                  desc: 'Renames *_spec.rb to *_test.rb',
+                  default: true,
+                  aliases: ['s'],
+                  type: :boolean
 
     def migrate(pathes)
       pp files(pathes)
@@ -35,7 +35,7 @@ module R2M
     private
 
     def process(file)
-      SpecConvertor.new(self).process(file)
+      SpecConvector.new(self).process(file)
     end
 
     def files(pathes)
