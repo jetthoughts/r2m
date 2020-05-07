@@ -28,6 +28,8 @@ class SpecMigration # rubocop:todo Style/Documentation
 
     test_basename = spec_basename.sub(/_spec(?=\.rb)/, '_test')
     test_file = test_dirname + test_basename
-    FileUtils.cp spec_file, test_file
+    FileUtils.cp spec_file, test_file unless test_file.exist?
+
+    test_file
   end
 end
